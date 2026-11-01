@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1f5f5b">
+<link rel="manifest" href="/manifest.json">
+<title>Kaapi Corner</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef2ef;--card:#fff;--ink:#17262b;--mute:#5d6d70;--brand:#1f5f5b;--hi:#e9b44c;--line:#d6dedb;--err:#b3261e}
+@media(prefers-color-scheme:dark){:root{--bg:#101a1c;--card:#182427;--ink:#eaf1ef;--mute:#9bb0ae;--brand:#4fb3aa;--line:#2a3b3e}}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;font-family:'Bricolage Grotesque',system-ui,sans-serif;background:var(--bg);color:var(--ink)}
+header{position:sticky;top:0;z-index:5;background:var(--brand);color:#fff;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px clamp(12px,4vw,40px)}
+header h1{margin:0;font-size:1.35rem;font-weight:800}
+nav{flex:1;display:flex;flex-wrap:wrap;gap:6px}
+button,select{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--hi);outline-offset:2px}
+.pill{background:#ffffff26;color:#fff;border:0;border-radius:999px;padding:6px 12px;text-decoration:none;font-size:.9rem}
+.pill.on{background:#fff;color:var(--brand)}
+.box .pill,dialog .pill{background:var(--brand);color:#fff}
+.cartbtn{background:var(--hi);color:#17262b;border:0;border-radius:999px;padding:8px 16px;font-weight:600}
+main{max-width:1100px;margin:0 auto;padding:18px clamp(12px,4vw,40px)}
+input,textarea,select{font:inherit;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%}
+.tools{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;align-items:center}
+.tools input{flex:1 1 200px;width:auto}
+.chip{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:7px 13px}
+.chip[aria-pressed=true]{background:var(--brand);color:#fff;border-color:var(--brand)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
+.card{position:relative;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.pic{font-size:3.4rem;text-align:center;height:130px;display:grid;place-items:center;background:color-mix(in srgb,var(--hi) 30%,var(--card))}
+.pic img{width:100%;height:100%;object-fit:cover}
+.heart{position:absolute;top:8px;right:8px;background:var(--card);border:0;border-radius:50%;width:34px;height:34px;font-size:1.2rem;color:var(--err)}
+.info{padding:12px 14px;display:flex;flex-direction:column;gap:5px;flex:1}
+.info h3{margin:0;font-size:1rem}.price{font-weight:800;font-size:1.15rem}
+.stock{color:var(--mute);font-size:.85rem}.stock.low{color:var(--err);font-weight:600}
+.row{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto}
+.add{flex:1;background:var(--brand);color:#fff;border:0;border-radius:10px;padding:9px;font-weight:600}
+.add:disabled{background:var(--line);color:var(--mute);cursor:not-allowed}
+.box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:12px}
+.between{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.tl{display:flex;list-style:none;padding:0;margin:10px 0;gap:4px}
+.tl li{flex:1;text-align:center;font-size:.8rem;padding:6px 2px;border-radius:8px;background:var(--bg);color:var(--mute)}
+.tl li.done{background:var(--brand);color:#fff}
+.wrap{overflow-x:auto}table{width:100%;border-collapse:collapse}td,th{padding:7px;border-bottom:1px solid var(--line);text-align:left}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.bars{display:flex;align-items:flex-end;gap:6px;height:120px}
+.bars div{flex:1;background:var(--brand);border-radius:6px 6px 0 0;min-height:4px;position:relative}
+.bars small{position:absolute;bottom:-18px;left:0;right:0;text-align:center;color:var(--mute);font-size:.7rem}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+aside{position:fixed;inset:0 0 0 auto;width:min(420px,100%);background:var(--card);box-shadow:-8px 0 30px #0004;transform:translateX(105%);transition:transform .25s;z-index:10;display:flex;flex-direction:column}
+aside.open{transform:none}
+.ahead{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-bottom:1px solid var(--line)}
+.ahead h2{margin:0}.x{background:none;border:0;color:var(--ink);font-size:1.6rem}
+#lines{flex:1;overflow:auto;padding:6px 18px}
+.line{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
+.line .n{flex:1}.line small{color:var(--mute)}
+.qty{display:flex;align-items:center;gap:6px}
+.qty button{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.foot{padding:12px 18px;border-top:1px solid var(--line);display:grid;gap:7px;max-height:60vh;overflow:auto}
+.total{display:flex;justify-content:space-between;font-weight:800;font-size:1.15rem}
+.pay{background:var(--brand);color:#fff;border:0;border-radius:10px;padding:11px;font-weight:600}.pay:disabled{opacity:.5}
+.empty{color:var(--mute);text-align:center;padding:24px 0}
+dialog{border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);width:min(480px,92vw)}
+dialog form{display:grid;gap:8px}
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:50}
+#toast.show{opacity:1}#toast.err{background:var(--err);color:#fff}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Kaapi Corner</h1>
+  <nav id="nav"></nav>
+  <button class="pill" id="lang" aria-label="Language">తె</button>
+  <button class="cartbtn" id="open"><span data-i="cart"></span> (<span id="count">0</span>)</button>
+</header>
+<main>
+  <section id="v-shop">
+    <div class="tools">
+      <input id="q" type="search" data-p="search" aria-label="Search">
+      <button class="chip" id="mic" aria-label="Voice search">🎤</button>
+      <div id="cats"></div>
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
+  <section id="v-wish" hidden><div class="grid" id="wgrid"></div></section>
+  <section id="v-orders" hidden><div id="olist"></div></section>
+  <section id="v-admin" hidden>
+    <div class="stats" id="stats"></div>
+    <div class="box"><form id="pform" class="fgrid"><input type="hidden" name="id">
+      <input name="name" placeholder="Name" required><input name="category" placeholder="Category" required>
+      <input name="price" type="number" min="0" placeholder="Price ₹" required><input name="stock" type="number" min="0" placeholder="Stock" required>
+      <input name="emoji" placeholder="Emoji"><input name="image" placeholder="Image URL (optional)">
+      <button class="pay">Save product</button></form></div>
+    <div class="box wrap"><table><tbody id="ptable"></tbody></table></div>
+    <div class="box"><form id="cform" class="fgrid"><input name="code" placeholder="Coupon code" required>
+      <input name="pct" type="number" min="1" max="90" placeholder="% off" required><button class="pay">Save coupon</button></form></div>
+    <div class="box wrap"><table><tbody id="otable"></tbody></table></div>
+  </section>
+</main>
+
+<aside id="cart" aria-label="Cart">
+  <div class="ahead"><h2 data-i="cart"></h2><button class="x" id="close" aria-label="Close">&times;</button></div>
+  <div id="lines"></div>
+  <div class="foot">
+    <div class="between"><input id="ccode" data-p="coupon" style="flex:1"><button class="chip" id="capply" data-i="apply"></button></div>
+    <div class="total"><span data-i="total"></span><span id="total">₹0</span></div>
+    <form id="form" style="display:grid;gap:7px">
+      <input name="name" data-p="name" required maxlength="100" autocomplete="name">
+      <input name="phone" data-p="phone" required pattern="\d{10}" inputmode="numeric" autocomplete="tel">
+      <textarea name="address" data-p="address" required rows="2" maxlength="200"></textarea>
+      <label><small data-i="slot"></small><select name="slot"><option>Morning 9-12</option><option>Evening 4-8</option></select></label>
+      <label><small data-i="payment"></small><select name="payment"><option value="COD">Cash on delivery</option><option value="UPI">UPI (demo)</option></select></label>
+      <button class="pay" id="pay" type="submit" data-i="place"></button>
+    </form>
+  </div>
+</aside>
+
+<dialog id="dlg"><div id="dbody"></div></dialog>
+<dialog id="adlg"><form id="aform"><h2 id="atitle"></h2>
+  <input id="an" name="name" data-p="name" maxlength="100"><input name="email" type="email" data-p="email" required>
+  <input name="password" type="password" data-p="password" minlength="6" required>
+  <button class="pay" data-i="login" id="abtn"></button>
+  <button type="button" class="chip" id="aswap"></button><button type="button" class="chip" data-close>×</button></form></dialog>
+<div id="toast" role="status"></div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const rupee=n=>'₹'+Number(n).toLocaleString('en-IN');
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ls={get:k=>{try{return localStorage.getItem(k)}catch{return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch{}},del:k=>{try{localStorage.removeItem(k)}catch{}}};
+const SHOP_WA='919999999999',STAT=['Placed','Packed','Shipped','Delivered'];
+const T={en:{shop:'Shop',wish:'Wishlist',orders:'My orders',admin:'Admin',login:'Login',logout:'Logout',cart:'Cart',search:'Search products',add:'Add to cart',out:'Out of stock',only:'Only',left:'left!',total:'Total',place:'Place order',empty:'Your cart is empty',coupon:'Coupon code',apply:'Apply',slot:'Delivery slot',payment:'Payment',all:'All',details:'Details',related:'Bought together',reviews:'Reviews',invoice:'Invoice',share:'Share on WhatsApp',name:'Full name',phone:'10-digit phone',address:'Delivery address',email:'Email',password:'Password (6+)',register:'Create account',none:'Nothing here yet',added:'Added to cart',haveacc:'Have an account? Login',noacc:'New here? Register'},
+te:{shop:'షాప్',wish:'ఇష్టమైనవి',orders:'నా ఆర్డర్లు',admin:'అడ్మిన్',login:'లాగిన్',logout:'లాగౌట్',cart:'కార్ట్',search:'వస్తువులు వెతకండి',add:'కార్ట్‌లో వేయండి',out:'స్టాక్ లేదు',only:'',left:'మాత్రమే మిగిలాయి!',total:'మొత్తం',place:'ఆర్డర్ చేయండి',empty:'కార్ట్ ఖాళీగా ఉంది',coupon:'కూపన్ కోడ్',apply:'వర్తింపజేయి',slot:'డెలివరీ సమయం',payment:'చెల్లింపు',all:'అన్నీ',details:'వివరాలు',related:'కలిపి కొనేవి',reviews:'రివ్యూలు',invoice:'ఇన్వాయిస్',share:'WhatsApp లో షేర్',name:'పూర్తి పేరు',phone:'10 అంకెల ఫోన్',address:'చిరునామా',email:'ఈమెయిల్',password:'పాస్‌వర్డ్ (6+)',register:'ఖాతా తెరవండి',none:'ఇంకా ఏమీ లేదు',added:'కార్ట్‌లో చేర్చబడింది',haveacc:'ఖాతా ఉందా? లాగిన్',noacc:'కొత్తవారా? రిజిస్టర్'}};
+let lang=ls.get('lang')||'en',tok=ls.get('tok')||'',me=null,cat='',view='shop',pct=0,coupon='',signup=false,catList=[];
+let products=new Map(),cart={},wl=new Set();
+try{cart=JSON.parse(ls.get('cart')||'{}')}catch{}
+const t=k=>T[lang][k]??T.en[k]??k;
+const api=async(u,o={})=>{const r=await fetch(u,{...o,headers:{'Content-Type':'application/json',...(tok?{Authorization:'Bearer '+tok}:{})},body:o.body&&JSON.stringify(o.body)});
+  const d=await r.json();if(!r.ok)throw new Error(d.error||'Error');return d;};
+function toast(m,err){const e=$('#toast');e.textContent=m;e.className='show'+(err?' err':'');clearTimeout(toast.t);toast.t=setTimeout(()=>e.className='',2600);}
+const save=()=>{ls.set('cart',JSON.stringify(cart));renderCart();};
+const wa=o=>`https://wa.me/${SHOP_WA}?text=`+encodeURIComponent(`Order #${o.id}\n`+(o.items||[]).map(x=>`${x.name} x${x.qty}`).join('\n')+`\nTotal: ₹${o.total}`);
+
+function applyLang(){
+  $$('[data-i]').forEach(e=>e.textContent=t(e.dataset.i));$$('[data-p]').forEach(e=>e.placeholder=t(e.dataset.p));
+  $('#lang').textContent=lang==='en'?'తె':'EN';document.documentElement.lang=lang;authUI();catBar();renderCart();show(view);}
+function nav(){const b=(v,k)=>`<button class="pill ${view===v?'on':''}" data-v="${v}">${t(k)}</button>`;
+  $('#nav').innerHTML=b('shop','shop')+(me?b('wish','wish')+b('orders','orders'):'')+(me?.role==='admin'?b('admin','admin'):'')+
+  (me?`<button class="pill" data-out>${t('logout')} (${esc(me.name.split(' ')[0])})</button>`:`<button class="pill" data-login>${t('login')}</button>`);}
+function catBar(){$('#cats').innerHTML=['',...catList].map(c=>`<button class="chip" data-c="${esc(c)}" aria-pressed="${c===cat}">${c||t('all')}</button>`).join(' ');}
+function show(v){view=v;['shop','wish','orders','admin'].forEach(x=>$('#v-'+x).hidden=x!==v);nav();
+  ({shop:load,wish:loadWish,orders:loadOrders,admin:loadAdmin})[v]().catch(x=>toast(x.message,1));}
+
+const card=p=>`<article class="card"><button class="heart" data-h="${p.id}" aria-label="Wishlist">${wl.has(p.id)?'♥':'♡'}</button>
+<div class="pic">${p.image?`<img src="${esc(p.image)}" alt="" loading="lazy">`:esc(p.emoji)}</div><div class="info"><h3>${esc(p.name)}</h3>
+<span class="price">${rupee(p.price)}</span>
+<span class="stock ${p.stock&&p.stock<=5?'low':''}">${p.stock?(p.stock<=5?`${t('only')} ${p.stock} ${t('left')}`:p.stock+' in stock'):t('out')}</span>
+${p.rating?`<span class="stock">★ ${p.rating} (${p.rc})</span>`:''}
+<div class="row"><button class="add" data-a="${p.id}" ${p.stock?'':'disabled'}>${t('add')}</button><button class="chip" data-d="${p.id}">${t('details')}</button></div></div></article>`;
+
+async function load(){const l=await api(`/api/products?category=${encodeURIComponent(cat)}&q=${encodeURIComponent($('#q').value)}`);
+  l.forEach(p=>products.set(p.id,p));$('#grid').innerHTML=l.length?l.map(card).join(''):`<p class="empty">${t('none')}</p>`;renderCart();}
+async function loadWish(){const l=await api('/api/wishlist');wl=new Set(l.map(p=>p.id));l.forEach(p=>products.set(p.id,p));
+  $('#wgrid').innerHTML=l.length?l.map(card).join(''):`<p class="empty">${t('none')}</p>`;}
+const orderBox=o=>{const i=STAT.indexOf(o.status);return `<div class="box"><div class="between"><b>#${o.id}</b><span>${esc(o.created_at)}</span><b>${rupee(o.total)}</b></div>
+<ol class="tl">${STAT.map((s,k)=>`<li class="${k<=i?'done':''}">${s}</li>`).join('')}</ol>
+<p>${o.items.map(x=>`${esc(x.emoji)} ${esc(x.name)} × ${x.qty}`).join(', ')}</p>
+<a class="pill" target="_blank" href="/api/orders/${o.id}/invoice?t=${tok}">${t('invoice')}</a> <a class="pill" target="_blank" href="${wa(o)}">${t('share')}</a></div>`;};
+async function loadOrders(){const os=await api('/api/orders');$('#olist').innerHTML=os.length?os.map(orderBox).join(''):`<p class="empty">${t('none')}</p>`;}
+
+async function loadAdmin(){
+  const[s,os,ps]=await Promise.all([api('/api/admin/stats'),api('/api/admin/orders'),api('/api/products')]);
+  const mx=Math.max(1,...s.daily.map(d=>d.t));
+  $('#stats').innerHTML=`<div class="box"><b style="font-size:1.4rem">${rupee(s.sales.s)}</b><br>${s.sales.n} orders</div>
+<div class="box"><div class="bars">${s.daily.map(d=>`<div title="${d.d}: ${rupee(d.t)}" style="height:${Math.round(d.t/mx*100)}%"><small>${d.d.slice(5)}</small></div>`).join('')}</div><br></div>
+<div class="box"><b>Top sellers</b><br>${s.top.map(x=>`${esc(x.name)} (${x.q})`).join('<br>')||'-'}</div>
+<div class="box"><b>Low stock</b><br>${s.low.map(x=>`${esc(x.name)}: ${x.stock}`).join('<br>')||'-'}</div>`;
+  ps.forEach(p=>products.set(p.id,p));
+  $('#ptable').innerHTML=ps.map(p=>`<tr><td>${esc(p.name)}</td><td>${rupee(p.price)}</td><td>${p.stock}</td><td><button class="chip" data-edit="${p.id}">Edit</button> <button class="chip" data-del="${p.id}">Del</button></td></tr>`).join('');
+  $('#otable').innerHTML=os.map(o=>`<tr><td>#${o.id}</td><td>${esc(o.name)}<br><small>${esc(o.phone)} | ${esc(o.slot)} | ${esc(o.payment)}</small></td><td>${rupee(o.total)}</td>
+<td><select data-os="${o.id}">${STAT.map(x=>`<option ${x===o.status?'selected':''}>${x}</option>`).join('')}</select></td></tr>`).join('');}
+
+async function details(id){const p=products.get(id);
+  const[rv,rl]=await Promise.all([api(`/api/products/${id}/reviews`),api(`/api/products/${id}/related`)]);
+  $('#dbody').innerHTML=`<h2>${esc(p.name)}</h2><p class="price">${rupee(p.price)}</p><h3>${t('related')}</h3>
+<div class="row">${rl.map(r=>`<button class="chip" data-a="${r.id}">${esc(r.emoji)} ${esc(r.name)} +</button>`).join('')||'-'}</div><h3>${t('reviews')}</h3>
+${rv.map(r=>`<p><b>${esc(r.name)}</b> ${'★'.repeat(r.stars)}<br>${esc(r.text)}</p>`).join('')||`<p class="empty">${t('none')}</p>`}
+${me?`<form id="rf" data-id="${id}"><select name="stars">${[5,4,3,2,1].map(n=>`<option>${n}</option>`).join('')}</select><input name="text" maxlength="200" required><button class="pay">OK</button></form>`:''}
+<button class="chip" data-close>×</button>`;
+  if(!$('#dlg').open)$('#dlg').showModal();}
+
+function renderCart(){const ids=Object.keys(cart).filter(i=>products.has(+i));let sub=0,n=0;
+  $('#lines').innerHTML=ids.length?ids.map(i=>{const p=products.get(+i),q=cart[i];sub+=p.price*q;n+=q;
+  return `<div class="line"><div class="n">${esc(p.emoji)} ${esc(p.name)}<br><small>${rupee(p.price)}</small></div><div class="qty"><button data-m="${i}" data-s="-1" aria-label="-">−</button><b>${q}</b><button data-m="${i}" data-s="1" aria-label="+">+</button></div></div>`}).join(''):`<p class="empty">${t('empty')}</p>`;
+  const d=Math.floor(sub*pct/100);$('#total').textContent=rupee(sub-d)+(d?` (−${rupee(d)})`:'');$('#count').textContent=n;$('#pay').disabled=!ids.length;}
+function change(id,d){const p=products.get(+id);if(!p)return;const q=(cart[id]||0)+d;
+  if(q<=0)delete cart[id];else if(q>Math.min(p.stock,20))return toast('Stock limit reached',1);else cart[id]=q;save();}
+function openAuth(){signup=false;authUI();if(!$('#adlg').open)$('#adlg').showModal();}
+function authUI(){$('#an').hidden=!signup;$('#an').required=signup;$('#atitle').textContent=t(signup?'register':'login');
+  $('#abtn').textContent=t(signup?'register':'login');$('#aswap').textContent=t(signup?'haveacc':'noacc');}
+
+document.addEventListener('click',async e=>{const g=s=>e.target.closest(s);let b;try{
+  if(b=g('[data-a]')){change(b.dataset.a,1);toast(t('added'));}
+  else if(b=g('[data-m]'))change(b.dataset.m,+b.dataset.s);
+  else if(b=g('[data-d]'))await details(+b.dataset.d);
+  else if(b=g('[data-h]')){if(!me)return openAuth();const id=+b.dataset.h,r=await api('/api/wishlist/'+id,{method:'POST'});
+    r.on?wl.add(id):wl.delete(id);view==='wish'?loadWish():load();}
+  else if(b=g('[data-v]'))show(b.dataset.v);
+  else if(b=g('[data-c]')){cat=b.dataset.c;catBar();load();}
+  else if(g('[data-login]'))openAuth();
+  else if(g('[data-out]')){tok='';me=null;wl=new Set();ls.del('tok');show('shop');}
+  else if(b=g('[data-close]'))b.closest('dialog').close();
+  else if(b=g('[data-edit]')){const p=products.get(+b.dataset.edit),f=$('#pform').elements;
+    for(const k of['id','name','category','price','stock','emoji','image'])f[k].value=p[k]??'';scrollTo({top:0,behavior:'smooth'});}
+  else if(b=g('[data-del]')){if(confirm('Delete product?')){await api('/api/admin/products/'+b.dataset.del,{method:'DELETE'});loadAdmin();}}
+}catch(x){toast(x.message,1)}});
+document.addEventListener('change',async e=>{const s=e.target.closest('[data-os]');
+  if(s)try{await api(`/api/admin/orders/${s.dataset.os}/status`,{method:'PUT',body:{status:s.value}});toast('Updated')}catch(x){toast(x.message,1)}});
+document.addEventListener('submit',async e=>{if(e.target.id!=='rf')return;e.preventDefault();
+  try{await api(`/api/products/${e.target.dataset.id}/reviews`,{method:'POST',body:Object.fromEntries(new FormData(e.target))});
+  await details(+e.target.dataset.id);load();}catch(x){toast(x.message,1)}});
+
+$('#open').onclick=()=>$('#cart').classList.add('open');
+$('#close').onclick=()=>$('#cart').classList.remove('open');
+document.addEventListener('keydown',e=>e.key==='Escape'&&$('#cart').classList.remove('open'));
+$('#q').oninput=()=>{clearTimeout(load.t);load.t=setTimeout(()=>load().catch(()=>{}),250);};
+$('#lang').onclick=()=>{lang=lang==='en'?'te':'en';ls.set('lang',lang);applyLang();};
+$('#aswap').onclick=()=>{signup=!signup;authUI();};
+$('#mic').onclick=()=>{const R=window.SpeechRecognition||window.webkitSpeechRecognition;if(!R)return toast('Voice search not supported here',1);
+  const r=new R();r.lang=lang==='te'?'te-IN':'en-IN';r.onresult=e=>{$('#q').value=e.results[0][0].transcript;load();};r.start();};
+$('#capply').onclick=async()=>{try{const c=$('#ccode').value.trim().toUpperCase();pct=(await api('/api/coupon/'+encodeURIComponent(c))).pct;coupon=c;toast(`${c}: ${pct}% off`);}
+  catch(x){pct=0;coupon='';toast(x.message,1)}renderCart();};
+
+$('#aform').onsubmit=async e=>{e.preventDefault();
+  try{const d=await api(signup?'/api/register':'/api/login',{method:'POST',body:Object.fromEntries(new FormData(e.target))});
+  tok=d.token;ls.set('tok',tok);me=d.user;wl=new Set((await api('/api/wishlist')).map(p=>p.id));e.target.reset();$('#adlg').close();show('shop');}
+  catch(x){toast(x.message,1)}};
+$('#form').onsubmit=async e=>{e.preventDefault();if(!me)return openAuth();
+  const f=Object.fromEntries(new FormData(e.target));f.items=Object.entries(cart).map(([id,qty])=>({id:+id,qty}));f.coupon=coupon;
+  const snap=f.items.map(i=>({name:products.get(i.id)?.name,qty:i.qty}));$('#pay').disabled=true;
+  try{const d=await api('/api/orders',{method:'POST',body:f});cart={};pct=0;coupon='';$('#ccode').value='';save();e.target.reset();$('#cart').classList.remove('open');
+  $('#dbody').innerHTML=`<h2>✅ #${d.orderId}</h2><p>${t('total')}: ${rupee(d.total)}${f.payment==='UPI'?' (UPI demo)':''}</p>
+<a class="pill" target="_blank" href="${wa({id:d.orderId,total:d.total,items:snap})}">${t('share')}</a> <a class="pill" target="_blank" href="/api/orders/${d.orderId}/invoice?t=${tok}">${t('invoice')}</a> <button class="chip" data-close>×</button>`;
+  $('#dlg').showModal();load();}catch(x){toast(x.message,1);$('#pay').disabled=false}};
+$('#pform').onsubmit=async e=>{e.preventDefault();const f=Object.fromEntries(new FormData(e.target));
+  try{await api(f.id?'/api/admin/products/'+f.id:'/api/admin/products',{method:f.id?'PUT':'POST',body:f});e.target.reset();toast('Saved');loadAdmin();}catch(x){toast(x.message,1)}};
+$('#cform').onsubmit=async e=>{e.preventDefault();
+  try{await api('/api/admin/coupons',{method:'POST',body:Object.fromEntries(new FormData(e.target))});e.target.reset();toast('Coupon saved');}catch(x){toast(x.message,1)}};
+
+(async()=>{
+  if(tok)try{me=await api('/api/me');wl=new Set((await api('/api/wishlist')).map(p=>p.id))}catch{tok='';me=null;ls.del('tok')}
+  const all=await api('/api/products');all.forEach(p=>products.set(p.id,p));
+  Object.keys(cart).forEach(i=>{if(!products.has(+i))delete cart[i]});
+  catList=[...new Set(all.map(p=>p.category))];applyLang();
+  if('serviceWorker'in navigator)navigator.serviceWorker.register('/sw.js').catch(()=>{});
+})().catch(x=>toast(x.message,1));
+</script>
+</body>
+</html>
